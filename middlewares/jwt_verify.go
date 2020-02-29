@@ -1,15 +1,29 @@
 package middlewares
 
 import (
-	"basic_mall/conf"
-	cerr "basic_mall/customerror"
-	"basic_mall/model"
-	"basic_mall/utils"
+	"mall/conf"
+	cerr "mall/customerror"
+	"mall/model"
+	"mall/utils"
 	"strings"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 )
+
+func JwtAdmin() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		secret := ctx.GetHeader("Authorization")
+		if secret == "" && len(secret) <= 7 {
+			utils.NewResqJson(ctx, utils.StateCodeUnauthorized, nil)
+		}
+		token := secret[7:]
+		jwt.Parse(token, func(token *jwt.Token) (i interface{}, e error) {
+
+		})
+
+	}
+}
 
 func JwtUser() gin.HandlerFunc {
 	return func(context *gin.Context) {

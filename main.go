@@ -1,13 +1,13 @@
 package main
 
 import (
-	"basic_mall/model"
-	"basic_mall/utils"
+	"mall/model"
+	"mall/utils"
 	"os/signal"
 	"syscall"
 	"time"
 
-	//"basic_mall/conf"
+	//"mall/conf"
 	"flag"
 	"fmt"
 	"os"
@@ -20,7 +20,7 @@ var port string
 
 type TableDesc struct {
 	Attnum int
-	Table string
+	Table  string
 	Type   string
 	Len    int
 	IsNull bool
@@ -147,7 +147,7 @@ type %s struct {
 		fileContent += fmt.Sprintf("\n    %s    %s  `json:\"%s\"`", structName, structType, taleDesc.Table)
 	}
 	fileContent += "\n}"
-	n ,err := file.WriteString(fileContent)
+	n, err := file.WriteString(fileContent)
 	if n != len([]byte(fileContent)) || err != nil {
 		fmt.Println("写入失败", err)
 		os.Exit(0)
@@ -166,12 +166,12 @@ func TransformType(dataType string) (res string) {
 		res = "bool"
 		break
 	case "bigint", "bigserial":
-		res = "int64" 
+		res = "int64"
 		break
-	case "smallint","integer","int4","int8","real","double precision","smallserial","serial":
+	case "smallint", "integer", "int4", "int8", "real", "double precision", "smallserial", "serial":
 		res = "int"
 		break
-	case "numeric","decimal":
+	case "numeric", "decimal":
 		res = "float64"
 		break
 	}

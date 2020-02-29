@@ -1,9 +1,9 @@
 package model
 
 import (
-	"basic_mall/conf"
 	"errors"
 	"fmt"
+	"mall/conf"
 	"os"
 	"sync"
 	"time"
@@ -18,10 +18,9 @@ type Model interface {
 	GetTableName() string
 }
 
-
-
 var db *gorm.DB
 var once sync.Once
+
 func New() *gorm.DB {
 	once.Do(func() {
 		var err error

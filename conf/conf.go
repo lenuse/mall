@@ -1,9 +1,9 @@
 package conf
 
 import (
-	"basic_mall/utils"
 	"fmt"
 	"io/ioutil"
+	"mall/utils"
 	"os"
 	"strings"
 	"sync"

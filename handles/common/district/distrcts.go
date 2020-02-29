@@ -1,10 +1,10 @@
 package district
 
 import (
-	"basic_mall/customerror"
-	"basic_mall/model"
-	"basic_mall/until"
 	"fmt"
+	"mall/customerror"
+	"mall/model"
+	"mall/until"
 	"strconv"
 	"strings"
 

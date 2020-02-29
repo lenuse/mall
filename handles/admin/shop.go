@@ -1,15 +1,16 @@
 package admin
 
 import (
-	"basic_mall/customerror"
-	"basic_mall/services"
-	"basic_mall/transports"
-	"basic_mall/utils"
 	"errors"
+	"mall/customerror"
+	"mall/services"
+	"mall/transports"
+	"mall/utils"
+
 	"github.com/gin-gonic/gin"
 )
 
-func create(ctx *gin.Context)  {
+func create(ctx *gin.Context) {
 	var transport transports.CreateShopTransport
 	if err := ctx.ShouldBind(transport); err != nil {
 		utils.AbortJSON(ctx, customerror.New(4000001, errors.New("传输错误")))
@@ -18,7 +19,7 @@ func create(ctx *gin.Context)  {
 	utils.ReturnJSON(ctx, shopInfo)
 }
 
-func update(ctx *gin.Context)  {
+func update(ctx *gin.Context) {
 	shopId := ctx.Param("id")
 	var transport transports.UpdateShopTransport
 

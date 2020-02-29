@@ -1,9 +1,9 @@
 package auth
 
 import (
-	"basic_mall/customerror"
-	"basic_mall/model"
-	"basic_mall/utils"
+	"mall/customerror"
+	"mall/model"
+	"mall/utils"
 
 	"github.com/gin-gonic/gin"
 )

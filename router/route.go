@@ -1,9 +1,9 @@
 package router
 
 import (
-	"basic_mall/handles/admin/auth"
-	"basic_mall/handles/common/district"
-	"basic_mall/middlewares"
+	"mall/handles/admin/auth"
+	"mall/handles/common/district"
+	"mall/middlewares"
 
 	"github.com/gin-gonic/gin"
 )

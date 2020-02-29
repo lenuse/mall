@@ -1,4 +1,4 @@
-module basic_mall
+module mall
 
 require (
 	cloud.google.com/go v0.39.0 // indirect
@@ -29,3 +29,5 @@ replace (
 	golang.org/x/sys v0.0.0-20190215142949-d0b11bdaac8a => github.com/golang/sys v0.0.0-20190215142949-d0b11bdaac8a
 	golang.org/x/text v0.3.0 => github.com/golang/text v0.3.0
 )
+
+go 1.13

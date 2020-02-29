@@ -1,14 +1,14 @@
 package services
 
 import (
-	"basic_mall/model"
-	"basic_mall/transports"
+	"mall/model"
+	"mall/transports"
 )
 
-func ShopRegister(transport transports.CreateShopTransport) model.Shop  {
+func ShopRegister(transport transports.CreateShopTransport) model.Shop {
 	return model.ShopCreate(transport)
 }
 
-func ShopUpdate(id int, transport transports.CreateShopTransport)  {
+func ShopUpdate(id int, transport transports.CreateShopTransport) {
 
 }
