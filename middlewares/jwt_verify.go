@@ -1,9 +1,9 @@
 package middlewares
 
 import (
-	"mall/utils"
-
 	"github.com/dgrijalva/jwt-go"
+	"github.com/lenuse/mall/utils"
+
 	"github.com/dgrijalva/jwt-go/request"
 	"github.com/gin-gonic/gin"
 )
@@ -14,13 +14,13 @@ func JwtVerify() gin.HandlerFunc {
 			return []byte("secret"), nil
 		})
 		if err != nil {
-			utils.NewResqJson(ctx, utils.StateCodeUnauthorized, nil, err.Error())
+			utils.NewRespJson(ctx, utils.StateCodeUnauthorized, nil, err.Error())
 		}
 		claims, ok := token.Claims.(jwt.StandardClaims)
 		if !token.Valid || !ok {
-			utils.NewResqJson(ctx, utils.StateCodeUnauthorized, nil, "")
+			utils.NewRespJson(ctx, utils.StateCodeUnauthorized, nil, "")
 		}
-		ctx.Set("userId", claims.Id)
+		ctx.Set(utils.UerIdKey, claims.Id)
 		ctx.Next()
 	}
 }

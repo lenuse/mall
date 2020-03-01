@@ -1,9 +1,8 @@
 package utils
 
 import (
-	"net/http"
-
 	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
 //定义返回结构
@@ -28,17 +27,17 @@ func StatusText(code StateCode) string {
 	return "未知错误"
 }
 
-//NewResqJson 构造返回json
-func NewResqJson(ctx *gin.Context, code StateCode, data interface{}, message string) {
-	traceId, _ := ctx.Get("traceId")
-	if message == "" {
-		message = StatusText(code)
+func NewRespJson(ctx *gin.Context, code StateCode, data interface{}, msg string)   {
+	if msg == "" {
+		msg = StatusText(code)
 	}
-	respMap := gin.H{
-		"state":   code,
-		"message": message,
-		"data":    data,
-		"traceId": traceId,
+	traceId,_ := ctx.Get(TraceIdKey)
+	content := gin.H{
+		"state":code,
+		"message":msg,
+		"data":data,
+		"trace_id":traceId,
 	}
-	ctx.JSON(http.StatusOK, respMap)
+	ctx.JSON(http.StatusOK,content)
+	return
 }
