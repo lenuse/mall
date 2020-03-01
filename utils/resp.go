@@ -29,11 +29,14 @@ func StatusText(code StateCode) string {
 }
 
 //NewResqJson 构造返回json
-func NewResqJson(ctx *gin.Context, code StateCode, data interface{}) {
+func NewResqJson(ctx *gin.Context, code StateCode, data interface{}, message string) {
 	traceId, _ := ctx.Get("traceId")
+	if message == "" {
+		message = StatusText(code)
+	}
 	respMap := gin.H{
 		"state":   code,
-		"message": StatusText(code),
+		"message": message,
 		"data":    data,
 		"traceId": traceId,
 	}
