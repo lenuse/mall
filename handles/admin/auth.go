@@ -7,14 +7,16 @@ import (
 	"github.com/lenuse/mall/utils"
 )
 
-func Login(ctx *gin.Context) {
-	var argument transport.AdminLogin
+// SignIn 后台登陆
+func SignIn(ctx *gin.Context) {
+	var argument transport.AdminSignIn
 	if err := ctx.ShouldBindJSON(&argument); err != nil {
 		utils.NewRespJSON(ctx, utils.StateCodeInvalidArgument, nil, err.Error())
 		return
 	}
 	admin := models.GetAdminByUsername(argument.Username)
-	if admin.Password != argument.Password {
+	if !utils.VerifyBcryptHash(admin.Password, argument.Password) {
+		utils.NewRespJSON(ctx, utils.StateCodeUnauthorized, nil, "")
 		return
 	}
 	token, err := utils.GetJwtToken(string(admin.ID), admin.NickName, "admin")
@@ -24,4 +26,19 @@ func Login(ctx *gin.Context) {
 	}
 	utils.NewRespJSON(ctx, utils.StateCodeSuccess, map[string]string{"token": token}, "")
 	return
+}
+
+func Create(ctx *gin.Context) {
+	var argument transport.AdminCreate
+	if err := ctx.ShouldBindJSON(&argument); err != nil {
+		utils.NewRespJSON(ctx, utils.StateCodeInvalidArgument, nil, err.Error())
+		return
+	}
+	if argument.RepeatInput != argument.Password {
+		return utils.NewRespJSON(ctx, utils.StateCodeInvalidArgument, nil, err.Error())
+	}
+	models.UmsAdmin{
+		Email: argument.Email,
+	}
+
 }
