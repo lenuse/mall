@@ -34,11 +34,23 @@ func Create(ctx *gin.Context) {
 		utils.NewRespJSON(ctx, utils.StateCodeInvalidArgument, nil, err.Error())
 		return
 	}
-	if argument.RepeatInput != argument.Password {
-		return utils.NewRespJSON(ctx, utils.StateCodeInvalidArgument, nil, err.Error())
-	}
-	models.UmsAdmin{
-		Email: argument.Email,
+	if !models.VerifyAdminUsernameAndEmailUnique(argument.Username, argument.Email) {
+		utils.NewRespJSON(ctx, utils.StateCodeAdminNotUnique, nil, "")
+		return
 	}
 
+	admin := models.UmsAdmin{
+		Email:    argument.Email,
+		Password: argument.Password,
+		Username: argument.Username,
+		Note:     argument.Note,
+		Status:   models.EnableStatus.Int8(),
+	}
+	err := admin.Save()
+	if err != nil {
+		utils.NewRespJSON(ctx, utils.StateCodeInsertError, nil, "")
+		return
+	}
+	utils.NewRespJSON(ctx, utils.StateCodeSuccess, nil, "")
+	return
 }

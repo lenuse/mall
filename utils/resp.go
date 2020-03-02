@@ -15,6 +15,8 @@ const (
 	StateCodeSuccess         StateCode = 10020001
 	StateCodeInvalidArgument StateCode = 10040001
 	StateCodeJwtError        StateCode = 10050001
+	StateCodeInsertError     StateCode = 10050002
+	StateCodeAdminNotUnique  StateCode = 30050001
 )
 
 //返回code解释
@@ -23,6 +25,8 @@ var statusText = map[StateCode]string{
 	StateCodeSuccess:         "成功",
 	StateCodeUnauthorized:    "登录验证失败",
 	StateCodeInvalidArgument: "参数错误",
+	StateCodeAdminNotUnique:  "用户账号重复",
+	StateCodeInsertError:     "存储失败",
 }
 
 // StatusText 获取code的解释
