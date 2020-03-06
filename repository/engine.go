@@ -1,11 +1,12 @@
-package models
+package entity
 
 import (
 	"fmt"
 	"os"
 
-	"github.com/go-xorm/xorm"
 	_ "github.com/lib/pq"
+	"upper.io/db.v3/postgresql"
+	"xorm.io/xorm"
 )
 
 var engine *xorm.Engine
@@ -16,6 +17,19 @@ type Status int8
 // Int8 转化为int8
 func (s Status) Int8() int8 {
 	return int8(s)
+}
+
+var pgOptions = map[string]string{
+	"sslmode":     "disable",
+	"search_path": "mall",
+}
+
+var settings = postgresql.ConnectionURL{
+	Host:     "demo.upper.io",
+	Database: "booktown",
+	User:     "demouser",
+	Password: "demop4ss",
+	Options:  pgOptions,
 }
 
 const (
@@ -29,7 +43,7 @@ const (
 
 func init() {
 	var err error
-	engine, err = xorm.NewEngine("postgres", "postgres://postgres:root@localhost:5432/test2?sslmode=disable")
+	engine, err = xorm.NewEngine("postgres", "postgres://postgres:mysecret@118.24.1.111:5432/postgres?sslmode=disable")
 	if err != nil {
 		_ = fmt.Errorf("数据库连接失败，%s", err.Error())
 		os.Exit(500)

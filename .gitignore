@@ -2,3 +2,6 @@
 .idea/
 vendor/
 go.sum
+.DS_STORE
+
+.vscode/
