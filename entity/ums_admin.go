@@ -23,15 +23,4 @@ func (m *UmsAdmin) TableName() string {
 	return "ums_admin"
 }
 
-// GetAdminByUsername 通过用户名获取用户
-func GetAdminByUsername(username string) (admin UmsAdmin) {
-	engine.Where("username", username).Get(&admin)
-	return
-}
 
-// VerifyAdminUsernameAndEmailUnique 验证用户名和电子邮箱是否唯一
-func VerifyAdminUsernameAndEmailUnique(username, email string) bool {
-	var admin UmsAdmin
-	engine.Where("username", username).Or("email", email).Get(&admin)
-	return admin.ID == 0
-}

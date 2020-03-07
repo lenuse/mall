@@ -10,11 +10,11 @@ import (
 var engine sqlbuilder.Database
 
 //Status 启用装填
-type Status int8
+type Status int
 
 // Int8 转化为int8
-func (s Status) Int8() int8 {
-	return int8(s)
+func (s Status) Int() int {
+	return int(s)
 }
 
 func getConnURL() postgresql.ConnectionURL {
