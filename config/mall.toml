@@ -1,0 +1,35 @@
+title = "mall config"
+
+[server]
+port=":8089"
+
+[token]
+secret = "qaz123!@#"
+
+[datebases]
+    [datebases.alpha]
+    host =  "127.0.0.1:5432"
+    connection_max = 300
+    user = "postgres"
+    password = "mysecret"
+    db_name = "postgres"
+    ssl = "disable"
+    schema = "mall"
+
+    [datebases.beta]
+    host =  "118.24.1.111:5432"
+    connection_max = 300
+    user = "postgres"
+    password = "mysecret"
+    db_name = "postgres"
+    ssl = "disable"
+    schema = "mall"
+
+    [datebases.release]
+    host =  "118.24.1.111:5432"
+    connection_max = 300
+    user = "postgres"
+    password = "mysecret"
+    db_name = "postgres"
+    ssl = "disable"
+    schema = "mall"
