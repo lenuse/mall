@@ -16,7 +16,7 @@ func SignIn(ctx *gin.Context) {
 		return
 	}
 	admin, _ := repository.GetAdminByUsername(argument.Username)
-	if !utils.VerifyBcryptHash(admin.Password, argument.Password) {
+	if !utils.VerifyBcryptHash(admin.SecretCode, argument.Password) {
 		utils.NewRespJSON(ctx, utils.Unauthorized, nil, "")
 		return
 	}
