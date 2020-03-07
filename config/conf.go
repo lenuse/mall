@@ -49,7 +49,7 @@ type mallConf struct {
 var (
 	conf    *mallConf
 	once    sync.Once
-	cfgLock *sync.RWMutex
+	cfgLock sync.RWMutex
 )
 
 func New() *mallConf {
@@ -61,13 +61,13 @@ func New() *mallConf {
 
 // 解析toml文件
 func ParseConfig() {
-	path, err := filepath.Abs("./mall.toml")
+	path, err := filepath.Abs("./config/mall.toml")
 	if err != nil {
 		panic(err)
 	}
+	config := new(mallConf)
 	cfgLock.Lock()
 	defer cfgLock.Unlock()
-	config := new(mallConf)
 	if _, err := toml.DecodeFile(path, config); err != nil {
 		panic(err)
 	}

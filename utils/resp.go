@@ -11,22 +11,22 @@ type StateCode int
 
 // 通用100 前台200 后台300
 const (
-	StateCodeUnauthorized    StateCode = 10040101
-	StateCodeSuccess         StateCode = 10020001
-	StateCodeInvalidArgument StateCode = 10040001
-	StateCodeJwtError        StateCode = 10050001
-	StateCodeInsertError     StateCode = 10050002
-	StateCodeAdminNotUnique  StateCode = 30050001
+	Unauthorized    StateCode = 10040101
+	Success         StateCode = 10020001
+	InvalidArgument StateCode = 10040001
+	JwtError        StateCode = 10050001
+	InsertError     StateCode = 10050002
+	AdminNotUnique  StateCode = 30050001
 )
 
 //返回code解释
 var statusText = map[StateCode]string{
-	StateCodeJwtError:        "签名生成错误",
-	StateCodeSuccess:         "成功",
-	StateCodeUnauthorized:    "登录验证失败",
-	StateCodeInvalidArgument: "参数错误",
-	StateCodeAdminNotUnique:  "用户账号重复",
-	StateCodeInsertError:     "存储失败",
+	JwtError:        "签名生成错误",
+	Success:         "成功",
+	Unauthorized:    "登录验证失败",
+	InvalidArgument: "参数错误",
+	AdminNotUnique:  "用户账号重复",
+	InsertError:     "存储失败",
 }
 
 // StatusText 获取code的解释

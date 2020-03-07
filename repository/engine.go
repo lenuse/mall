@@ -44,6 +44,7 @@ const (
 func Init() (err error) {
 	settings := getConnURL()
 	engine, err = postgresql.Open(settings)
+	engine.SetLogging(true)
 	return
 }
 

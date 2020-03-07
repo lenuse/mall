@@ -2,8 +2,8 @@ package admin
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/lenuse/mall/entity"
 	"github.com/lenuse/mall/repository"
+	"github.com/lenuse/mall/service"
 	"github.com/lenuse/mall/transport"
 	"github.com/lenuse/mall/utils"
 )
@@ -12,47 +12,39 @@ import (
 func SignIn(ctx *gin.Context) {
 	var argument transport.AdminSignIn
 	if err := ctx.ShouldBindJSON(&argument); err != nil {
-		utils.NewRespJSON(ctx, utils.StateCodeInvalidArgument, nil, err.Error())
+		utils.NewRespJSON(ctx, utils.InvalidArgument, nil, err.Error())
 		return
 	}
-	admin,_ := repository.GetAdminByUsername(argument.Username)
+	admin, _ := repository.GetAdminByUsername(argument.Username)
 	if !utils.VerifyBcryptHash(admin.Password, argument.Password) {
-		utils.NewRespJSON(ctx, utils.StateCodeUnauthorized, nil, "")
+		utils.NewRespJSON(ctx, utils.Unauthorized, nil, "")
 		return
 	}
 	token, err := utils.GetJwtToken(string(admin.ID), admin.NickName, "admin")
 	if err != nil {
-		utils.NewRespJSON(ctx, utils.StateCodeJwtError, nil, err.Error())
+		utils.NewRespJSON(ctx, utils.JwtError, nil, err.Error())
 		return
 	}
-	utils.NewRespJSON(ctx, utils.StateCodeSuccess, map[string]string{"token": token}, "")
+	utils.NewRespJSON(ctx, utils.Success, map[string]string{"token": token}, "")
 	return
 }
 
 func CreateAdminUser(ctx *gin.Context) {
 	var argument transport.AdminCreate
 	if err := ctx.ShouldBindJSON(&argument); err != nil {
-		utils.NewRespJSON(ctx, utils.StateCodeInvalidArgument, nil, err.Error())
+		utils.NewRespJSON(ctx, utils.InvalidArgument, nil, err.Error())
 		return
 	}
-	if !repository.VerifyAdminUsernameAndEmailUnique(argument.Username, argument.Email) {
-		utils.NewRespJSON(ctx, utils.StateCodeAdminNotUnique, nil, "")
+	isUnique := repository.VerifyAdminUsernameAndEmailUnique(argument.Username, argument.Email)
+	if !isUnique {
+		utils.NewRespJSON(ctx, utils.AdminNotUnique, nil, "")
 		return
 	}
-	admin := repository.AdminRepository{
-		UmsAdmin:entity.UmsAdmin{
-			Email:    argument.Email,
-			Password: argument.Password,
-			Username: argument.Username,
-			Note:     argument.Note,
-			Status:   repository.EnableStatus.Int(),
-		},
-	}
-	err := admin.Save()
+	err := service.NewAdminUser(argument)
 	if err != nil {
-		utils.NewRespJSON(ctx, utils.StateCodeInsertError, nil, "")
+		utils.NewRespJSON(ctx, utils.InsertError, nil, err.Error())
 		return
 	}
-	utils.NewRespJSON(ctx, utils.StateCodeSuccess, nil, "")
+	utils.NewRespJSON(ctx, utils.Success, nil, "")
 	return
 }

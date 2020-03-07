@@ -12,8 +12,8 @@ type UmsAdmin struct {
 	Email     string    `json:"email" db:"email"`
 	NickName  string    `json:"nick_name" db:"nick_name"`
 	Note      string    `json:"note" db:"note"`
-	CreatedAt time.Time `json:"create_time" db:"create_time"`
-	LoginAt   time.Time `json:"login_time" db:"login_time"`
+	CreatedAt time.Time `json:"created_at" db:"created_at"`
+	LoginAt   time.Time `json:"login_at" db:"login_at"`
 	Status    int       `json:"status" db:"status"`
 	UpdatedAt time.Time `json:"updated_at" db:"updated_at"`
 	DeletedAt time.Time `json:"deleted_at" db:"deleted_at"`
@@ -22,5 +22,3 @@ type UmsAdmin struct {
 func (m *UmsAdmin) TableName() string {
 	return "ums_admin"
 }
-
-

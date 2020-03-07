@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"time"
+
 	"github.com/lenuse/mall/entity"
 	"upper.io/db.v3"
 )
@@ -10,6 +12,7 @@ type AdminRepository struct {
 }
 
 func (r *AdminRepository) Save() error {
+	r.CreatedAt = time.Now()
 	newId, err := engine.Collection(r.TableName()).Insert(r.UmsAdmin)
 	if err != nil {
 		return err
@@ -21,7 +24,10 @@ func (r *AdminRepository) Save() error {
 // GetAdminByUsername 通过用户名获取用户
 func GetAdminByUsername(username string) (r AdminRepository, err error) {
 	err = engine.Collection(r.TableName()).
-		Find(db.Cond{"username": username}).
+		Find(db.Cond{
+			"username":   username,
+			"deleted_at": db.IsNull,
+		}).
 		One(&r)
 	return
 }
@@ -30,12 +36,12 @@ func GetAdminByUsername(username string) (r AdminRepository, err error) {
 func VerifyAdminUsernameAndEmailUnique(username, email string) bool {
 	var r AdminRepository
 	cond := db.Or(
-		db.Cond{"username":username},
-		db.Cond{"email":email},
-		)
-	err := engine.Collection(r.TableName()).
+		db.Cond{"username": username},
+		db.Cond{"email": email},
+	)
+	engine.Collection(r.TableName()).
 		Find(cond).One(&r)
-	if err != nil || r.ID != 0 {
+	if r.ID != 0 {
 		return false
 	}
 	return true
