@@ -39,8 +39,8 @@ func VerifyAdminUsernameAndEmailUnique(username, email string) bool {
 		db.Cond{"username": username},
 		db.Cond{"email": email},
 	)
-	engine.Collection(r.TableName()).
-		Find(cond).One(&r)
+	collection := engine.Collection(r.TableName())
+	collection.Find(cond).One(&r)
 	if r.ID != 0 {
 		return false
 	}

@@ -1,7 +1,6 @@
 package utils
 
-
 const (
-	TraceIdKey = "traceId"
-	UerIdKey = "userId"
+	TraceIdKey = "trace_id"
+	UerIdKey   = "user_id"
 )

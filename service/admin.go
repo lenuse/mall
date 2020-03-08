@@ -1,7 +1,7 @@
 package service
 
 import (
-	"fmt"
+	"time"
 
 	"github.com/lenuse/mall/entity"
 	"github.com/lenuse/mall/repository"
@@ -23,6 +23,18 @@ func NewAdminUser(argument transport.AdminCreate) error {
 			Status:     repository.EnableStatus.Int(),
 		},
 	}
-	fmt.Println(admin)
 	return admin.Save()
+}
+
+func NewRole(argument transport.AdminRoleCreate) error {
+	role := repository.RoleRepository{
+		UmsRole: entity.UmsRole{
+			Name:        argument.Name,
+			Description: argument.Description,
+			CreatedAt:   time.Now(),
+			Status:      argument.Status.Int(),
+			Sort:        argument.Sort,
+		},
+	}
+	return role.Save()
 }

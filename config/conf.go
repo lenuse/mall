@@ -61,7 +61,7 @@ func New() *mallConf {
 
 // 解析toml文件
 func ParseConfig() {
-	path, err := filepath.Abs("./config/mall.toml")
+	path, err := filepath.Abs("../config/mall.toml")
 	if err != nil {
 		panic(err)
 	}

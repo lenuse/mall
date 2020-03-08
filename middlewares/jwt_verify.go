@@ -2,10 +2,9 @@ package middlewares
 
 import (
 	jwt "github.com/dgrijalva/jwt-go"
-	"github.com/lenuse/mall/utils"
-
 	"github.com/dgrijalva/jwt-go/request"
 	"github.com/gin-gonic/gin"
+	"github.com/lenuse/mall/utils"
 )
 
 func JwtVerify() gin.HandlerFunc {
@@ -14,12 +13,12 @@ func JwtVerify() gin.HandlerFunc {
 			return []byte("secret"), nil //TODO: 修改secret获取
 		})
 		if err != nil {
-			utils.NewRespJSON(ctx, utils.Unauthorized, nil, err.Error())
+			utils.NewRespJSON(utils.Unauthorized).WriteJson(ctx)
 			return
 		}
 		claims, ok := token.Claims.(jwt.StandardClaims)
 		if !token.Valid || !ok {
-			utils.NewRespJSON(ctx, utils.Unauthorized, nil, "")
+			utils.NewRespJSON(utils.Unauthorized).WriteJson(ctx)
 			return
 		}
 		ctx.Set(utils.UerIdKey, claims.Id)

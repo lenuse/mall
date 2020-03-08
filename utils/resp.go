@@ -1,12 +1,18 @@
 package utils
 
 import (
+	"github.com/gin-gonic/gin"
 	"github.com/lenuse/mall/transport"
+	"net/http"
 	"upper.io/db.v3"
 )
 
 // StateCode 定义返回结构
 type StateCode int
+
+func (code StateCode) Int() int {
+	return int(code)
+}
 
 // 通用100 前台200 后台300
 const (
@@ -54,25 +60,43 @@ func NewPaginate(result db.Result, page transport.Page) Paginate {
 	}
 }
 
+type MetaInfo struct {
+	TraceId  string   `json:"trace_id"`
+	Paginate Paginate `json:"paginate"`
+}
+
 type RespJson struct {
 	State   StateCode   `json:"state"`
 	Message string      `json:"message"`
 	Data    interface{} `json:"data"`
-	Meta    struct {
-		TraceId  string   `json:"trace_id"`
-		Paginate Paginate `json:"paginate"`
-	} `json:"meta"`
+	Meta    MetaInfo    `json:"meta"`
 }
 
-func (r *RespJson) SetMessage(msg string) {
+func (r *RespJson) SetMessage(msg string) *RespJson {
 	r.Message = msg
-	return
+	return r
+}
+
+func (r *RespJson) SetData(data interface{}) *RespJson {
+	r.Data = data
+	return r
+}
+
+func (r *RespJson) SetPaginate(p Paginate) *RespJson {
+	r.Meta.Paginate = p
+	return r
+}
+
+func (r *RespJson) WriteJson(ctx *gin.Context) {
+	trace, _ := ctx.Get(TraceIdKey)
+	r.Meta.TraceId = trace.(string)
+	ctx.JSON(http.StatusOK, *r)
 }
 
 // NewRespJSON 实例化返回
-func NewRespJSON(code StateCode) RespJson {
+func NewRespJSON(code StateCode) *RespJson {
 	msg := StatusText(code)
-	return RespJson{
+	return &RespJson{
 		State:   code,
 		Message: msg,
 	}
