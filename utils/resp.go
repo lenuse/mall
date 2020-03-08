@@ -1,9 +1,8 @@
 package utils
 
 import (
-	"net/http"
-
-	"github.com/gin-gonic/gin"
+	"github.com/lenuse/mall/transport"
+	"upper.io/db.v3"
 )
 
 // StateCode 定义返回结构
@@ -12,7 +11,7 @@ type StateCode int
 // 通用100 前台200 后台300
 const (
 	Unauthorized    StateCode = 10040101
-	Success         StateCode = 10020001
+	Success         StateCode = 10020000
 	InvalidArgument StateCode = 10040001
 	JwtError        StateCode = 10050001
 	InsertError     StateCode = 10050002
@@ -37,18 +36,44 @@ func StatusText(code StateCode) string {
 	return "未知错误"
 }
 
-// NewRespJSON 实例化返回
-func NewRespJSON(ctx *gin.Context, code StateCode, data interface{}, msg string) {
-	if msg == "" {
-		msg = StatusText(code)
+type Paginate struct {
+	PerPage      uint   `json:"per_page"`
+	Page         uint   `json:"Page"`
+	TotalPages   uint   `json:"total_pages"`
+	TotalEntries uint64 `json:"total_entries"`
+}
+
+func NewPaginate(result db.Result, page transport.Page) Paginate {
+	totalPages, _ := result.TotalPages()
+	totalEntries, _ := result.TotalEntries()
+	return Paginate{
+		PerPage:      page.GetPageSize(),
+		Page:         page.GetPageNumber(),
+		TotalPages:   totalPages,
+		TotalEntries: totalEntries,
 	}
-	traceID, _ := ctx.Get(TraceIdKey)
-	content := gin.H{
-		"state":    code,
-		"message":  msg,
-		"data":     data,
-		"trace_id": traceID,
-	}
-	ctx.JSON(http.StatusOK, content)
+}
+
+type RespJson struct {
+	State   StateCode   `json:"state"`
+	Message string      `json:"message"`
+	Data    interface{} `json:"data"`
+	Meta    struct {
+		TraceId  string   `json:"trace_id"`
+		Paginate Paginate `json:"paginate"`
+	} `json:"meta"`
+}
+
+func (r *RespJson) SetMessage(msg string) {
+	r.Message = msg
 	return
+}
+
+// NewRespJSON 实例化返回
+func NewRespJSON(code StateCode) RespJson {
+	msg := StatusText(code)
+	return RespJson{
+		State:   code,
+		Message: msg,
+	}
 }
