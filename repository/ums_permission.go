@@ -38,3 +38,15 @@ func getPermissionsByRoleId(roleId int64) (PermissionRepositoryList, error) {
 	}
 	return permissions, nil
 }
+
+func getPermissions() (PermissionRepositoryList, error) {
+	var permissions PermissionRepositoryList
+	var permission entity.UmsPermission
+	err := engine.Collection(permission.TableName()).
+		Find("status", EnableStatus.Int()).
+		OrderBy(SortDesc).All(&permissions)
+	if err != nil {
+		return nil, err
+	}
+	return permissions, nil
+}

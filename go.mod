@@ -11,5 +11,6 @@ require (
 	github.com/lib/pq v1.3.0
 	github.com/stretchr/testify v1.4.0
 	golang.org/x/crypto v0.0.0-20200221231518-2aa609cf4a9d
+	gopkg.in/mgo.v2 v2.0.0-20190816093944-a6b53ec6cb22 // indirect
 	upper.io/db.v3 v3.6.4+incompatible
 )

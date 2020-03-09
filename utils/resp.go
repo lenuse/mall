@@ -1,9 +1,10 @@
 package utils
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"github.com/lenuse/mall/transport"
-	"net/http"
 	"upper.io/db.v3"
 )
 

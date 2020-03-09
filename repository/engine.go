@@ -31,6 +31,7 @@ func getConnURL() postgresql.ConnectionURL {
 	}
 }
 
+//状态
 const (
 	// NonStatus 无状态预留
 	NonStatus Status = iota
@@ -38,6 +39,12 @@ const (
 	EnableStatus
 	// DisableStatus 停用
 	DisableStatus
+)
+
+// sort排序
+const (
+	SortASC  string = "sort"
+	SortDesc string = "-sort"
 )
 
 // Init 初始化数据库连接
