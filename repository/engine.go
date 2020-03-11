@@ -59,3 +59,9 @@ func Init() (err error) {
 func Close() error {
 	return engine.Close()
 }
+
+type Repository interface {
+	Save() error
+	Delete() error
+	Update() error
+}

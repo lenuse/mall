@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"time"
+
 	"github.com/lenuse/mall/entity"
 	"upper.io/db.v3"
 )
@@ -18,6 +20,16 @@ func (r *PermissionRepository) Init() error {
 		return err
 	}
 	r.Roles = roles
+	return nil
+}
+
+func (r *PermissionRepository) Save() error {
+	r.CreatedAt = time.Now()
+	newId, err := engine.Collection(r.TableName()).Insert(r.UmsPermission)
+	if err != nil {
+		return err
+	}
+	r.Id = newId.(int64)
 	return nil
 }
 
