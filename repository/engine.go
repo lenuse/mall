@@ -47,12 +47,15 @@ const (
 	SortDesc string = "-sort"
 )
 
-// Init 初始化数据库连接
-func Init() (err error) {
+// Open 初始化数据库连接
+func Open() error {
 	settings := getConnURL()
-	engine, err = postgresql.Open(settings)
+	engine, err := postgresql.Open(settings)
+	if err != nil {
+		return err
+	}
 	engine.SetLogging(true)
-	return
+	return nil
 }
 
 // Close 关闭数据库

@@ -12,39 +12,39 @@ import (
 func SignIn(ctx *gin.Context) {
 	var argument transport.AdminSignIn
 	if err := ctx.ShouldBindJSON(&argument); err != nil {
-		utils.NewRespJSON(utils.InvalidArgument).SetMessage(err.Error()).WriteJson(ctx)
+		utils.NewResponse(utils.InvalidArgument).SetMessage(err.Error()).WriteJson(ctx)
 		return
 	}
 	admin, _ := repository.GetAdminByUsername(argument.Username)
 	if !utils.VerifyBcryptHash(admin.SecretCode, argument.Password) {
-		utils.NewRespJSON(utils.Unauthorized).WriteJson(ctx)
+		utils.NewResponse(utils.Unauthorized).WriteJson(ctx)
 		return
 	}
 	token, err := utils.GetJwtToken(string(admin.ID), admin.NickName, "admin")
 	if err != nil {
-		utils.NewRespJSON(utils.JwtError).SetMessage(err.Error()).WriteJson(ctx)
+		utils.NewResponse(utils.JwtError).SetMessage(err.Error()).WriteJson(ctx)
 		return
 	}
-	utils.NewRespJSON(utils.JwtError).SetData(map[string]string{"token": token}).WriteJson(ctx)
+	utils.NewResponse(utils.JwtError).SetData(map[string]string{"token": token}).WriteJson(ctx)
 	return
 }
 
 func CreateAdminUser(ctx *gin.Context) {
 	var argument transport.AdminCreate
 	if err := ctx.ShouldBindJSON(&argument); err != nil {
-		utils.NewRespJSON(utils.InvalidArgument).SetMessage(err.Error()).WriteJson(ctx)
+		utils.NewResponse(utils.InvalidArgument).SetMessage(err.Error()).WriteJson(ctx)
 		return
 	}
 	isUnique := repository.VerifyAdminUsernameAndEmailUnique(argument.Username, argument.Email)
 	if !isUnique {
-		utils.NewRespJSON(utils.AdminNotUnique).WriteJson(ctx)
+		utils.NewResponse(utils.AdminNotUnique).WriteJson(ctx)
 		return
 	}
-	err := service.NewAdminUser(argument)
+	err := service.CreateAdminUser(argument)
 	if err != nil {
-		utils.NewRespJSON(utils.AdminNotUnique).SetMessage(err.Error()).WriteJson(ctx)
+		utils.NewResponse(utils.AdminNotUnique).SetMessage(err.Error()).WriteJson(ctx)
 		return
 	}
-	utils.NewRespJSON(utils.Success).WriteJson(ctx)
+	utils.NewResponse(utils.Success).WriteJson(ctx)
 	return
 }

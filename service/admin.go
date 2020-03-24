@@ -9,7 +9,7 @@ import (
 	"github.com/lenuse/mall/utils"
 )
 
-func NewAdminUser(argument transport.AdminCreate) error {
+func CreateAdminUser(argument transport.AdminCreate) error {
 	password, err := utils.GetBcryptHash(argument.Password)
 	if err != nil {
 		return err
@@ -26,7 +26,7 @@ func NewAdminUser(argument transport.AdminCreate) error {
 	return admin.Save()
 }
 
-func NewRole(argument transport.AdminRoleCreate) error {
+func CreateRole(argument transport.AdminRole) error {
 	role := repository.RoleRepository{
 		UmsRole: entity.UmsRole{
 			Name:        argument.Name,

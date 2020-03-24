@@ -13,12 +13,12 @@ func JwtVerify() gin.HandlerFunc {
 			return []byte("secret"), nil //TODO: 修改secret获取
 		})
 		if err != nil {
-			utils.NewRespJSON(utils.Unauthorized).WriteJson(ctx)
+			utils.NewResponse(utils.Unauthorized).WriteJson(ctx)
 			return
 		}
 		claims, ok := token.Claims.(jwt.StandardClaims)
 		if !token.Valid || !ok {
-			utils.NewRespJSON(utils.Unauthorized).WriteJson(ctx)
+			utils.NewResponse(utils.Unauthorized).WriteJson(ctx)
 			return
 		}
 		ctx.Set(utils.UerIdKey, claims.Id)

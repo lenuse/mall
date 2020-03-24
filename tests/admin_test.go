@@ -67,7 +67,7 @@ func TestAdminLogin(t *testing.T) {
 }
 
 func BenchmarkAdminLogin(b *testing.B) {
-	repository.Init()
+	_ = repository.Open()
 	defer repository.Close()
 	for i := 0; i < b.N; i++ {
 		w := httptest.NewRecorder()

@@ -1,11 +1,12 @@
 package repository
 
 import (
-	"bytes"
 	"context"
 	"errors"
 	"fmt"
 	"github.com/lenuse/mall/entity"
+	"github.com/lenuse/mall/utils"
+	"strings"
 	"time"
 	"upper.io/db.v3"
 	"upper.io/db.v3/lib/sqlbuilder"
@@ -57,27 +58,28 @@ func getRolesByPermissionId(permissionId int64) (RoleRepositoryList, error) {
 
 func createPermissionRelation(roleId int64, permissionIds []int64) error {
 	ctx := context.Background()
-	if len(permissionIds) == 0 {
-		return errors.New("permissionIds is null")
-	}
 	var relation entity.UmsRolePermissionRelation
+	size := len(permissionIds)
+	if size == 0 || roleId == 0 {
+		return errors.New("permissionIds is null or roleId is zero")
+	}
 	return engine.Tx(ctx, func(sess sqlbuilder.Tx) (err error) {
-		_, err = sess.DeleteFrom(relation.TableName()).Where("role_id", roleId).Exec()
+		_, err = sess.DeleteFrom(relation.TableName()).Where("role_id = ?", roleId).Exec()
 		if err != nil {
 			return err
 		}
-		var bt bytes.Buffer
-		sql := fmt.Sprintf("INSERT INTO %s (role_id, permission_id) VALUES", relation.TableName())
-		bt.WriteString(sql)
-		size := len(permissionIds)
+		sql := fmt.Sprintf("INSERT INTO %s (role_id, permission_id) VALUES(?,?)", relation.TableName())
+		var builder strings.Builder
+		builder.WriteString(sql)
+		arg := make([]int64, 0, size*2) //两个字段数据
 		for i, permissionId := range permissionIds {
-			if i+1 == size {
-				bt.WriteString(fmt.Sprintf("(%d, %d)", roleId, permissionId))
-			} else {
-				bt.WriteString(fmt.Sprintf("(%d, %d),", roleId, permissionId))
+			if i > 0 {
+				builder.WriteString(`,(?,?)`)
 			}
+			arg[i*2] = roleId
+			arg[i*2+1] = permissionId
 		}
-		_, err = sess.Exec(bt.String())
+		_, err = sess.Exec(builder.String(), arg)
 		return
 	})
 }
@@ -98,4 +100,11 @@ func getRoleRepositoryList(name string) (RoleRepositoryList, error) {
 
 func GetRoleRepositoryList(name string) (RoleRepositoryList, error) {
 	return getRoleRepositoryList(name)
+}
+
+func batchUpdateRoleColumn(ids []int64, status Status) error {
+	var role entity.UmsRole
+	idStr, _ := utils.Slice2String(ids)
+	engine.Update(role.TableName()).Set("status = ?", status.Int()).Where("id in (%s)", idStr).Exec()
+	return error()
 }

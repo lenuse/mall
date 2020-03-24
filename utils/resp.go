@@ -20,9 +20,25 @@ const (
 	Unauthorized    StateCode = 10040101
 	Success         StateCode = 10020000
 	InvalidArgument StateCode = 10040001
-	JwtError        StateCode = 10050001
-	InsertError     StateCode = 10050002
-	AdminNotUnique  StateCode = 30050001
+)
+
+//前台100 500 错误
+const (
+	ApiError StateCode = 10050000 + iota
+)
+
+//后台300 500 错误
+const (
+	ManageError StateCode = 30050000 + iota
+	AdminNotUnique
+)
+
+// 通用100 500 错误
+const (
+	GeneralError StateCode = 10050000 + iota
+	JwtError
+	InsertError
+	QueryFail
 )
 
 //返回code解释
@@ -33,6 +49,7 @@ var statusText = map[StateCode]string{
 	InvalidArgument: "参数错误",
 	AdminNotUnique:  "用户账号重复",
 	InsertError:     "存储失败",
+	QueryFail:       "查询失败",
 }
 
 // StatusText 获取code的解释
@@ -66,38 +83,38 @@ type MetaInfo struct {
 	Paginate Paginate `json:"paginate"`
 }
 
-type RespJson struct {
+type Response struct {
 	State   StateCode   `json:"state"`
 	Message string      `json:"message"`
 	Data    interface{} `json:"data"`
 	Meta    MetaInfo    `json:"meta"`
 }
 
-func (r *RespJson) SetMessage(msg string) *RespJson {
+func (r *Response) SetMessage(msg string) *Response {
 	r.Message = msg
 	return r
 }
 
-func (r *RespJson) SetData(data interface{}) *RespJson {
+func (r *Response) SetData(data interface{}) *Response {
 	r.Data = data
 	return r
 }
 
-func (r *RespJson) SetPaginate(p Paginate) *RespJson {
+func (r *Response) SetPaginate(p Paginate) *Response {
 	r.Meta.Paginate = p
 	return r
 }
 
-func (r *RespJson) WriteJson(ctx *gin.Context) {
+func (r *Response) WriteJson(ctx *gin.Context) {
 	trace, _ := ctx.Get(TraceIdKey)
 	r.Meta.TraceId = trace.(string)
 	ctx.JSON(http.StatusOK, *r)
 }
 
-// NewRespJSON 实例化返回
-func NewRespJSON(code StateCode) *RespJson {
+// NewResponse 实例化返回
+func NewResponse(code StateCode) *Response {
 	msg := StatusText(code)
-	return &RespJson{
+	return &Response{
 		State:   code,
 		Message: msg,
 	}

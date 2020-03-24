@@ -2,14 +2,14 @@ package transport
 
 import "github.com/lenuse/mall/repository"
 
-type AdminRoleCreate struct {
+type AdminRole struct {
 	Name        string            `form:"name" json:"name" binding:"required"`
 	Description string            `form:"description" json:"description"`
-	Status      repository.Status `form:"description" json:"description" bind:"required"`
+	Status      repository.Status `form:"description" json:"description" bind:"required,min=1,max=2"`
 	Sort        int               `form:"sort" json:"sort"`
 }
 
 type AdminRoleStatusUpdate struct {
-	Ids    string            `form:"sort" json:"sort" bind:"required"`
-	Status repository.Status `form:"sort" json:"sort" bind:"required"`
+	Id     []int64           `form:"id" json:"sort" bind:"gte=1,dive,required"`
+	Status repository.Status `form:"status" json:"sort" bind:"required,min=1,max=2"`
 }
