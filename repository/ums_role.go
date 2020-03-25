@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/gin-gonic/gin"
 	"github.com/lenuse/mall/entity"
 	"github.com/lenuse/mall/utils"
 	"strings"
@@ -102,9 +103,9 @@ func GetRoleRepositoryList(name string) (RoleRepositoryList, error) {
 	return getRoleRepositoryList(name)
 }
 
-func batchUpdateRoleColumn(ids []int64, status Status) error {
+func batchUpdateRoleColumn(ids []int64, status Status, ctx *gin.Context) error {
 	var role entity.UmsRole
 	idStr, _ := utils.Slice2String(ids)
-	engine.Update(role.TableName()).Set("status = ?", status.Int()).Where("id in (%s)", idStr).Exec()
-	return error()
+	_, err := engine.Update(role.TableName()).Set("status = ?", status.Int()).Where("id in (%s)", idStr).ExecContext(ctx)
+	return err
 }

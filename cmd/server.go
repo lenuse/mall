@@ -7,9 +7,8 @@ import (
 )
 
 func main() {
-	repository.Init()
+	_ = repository.Open()
 	defer repository.Close()
 	app := mall.New()
-	app.Run(config.New().Server.Port)
+	_ = app.Run(config.New().Server.Port)
 }
-
