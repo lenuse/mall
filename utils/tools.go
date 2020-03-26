@@ -7,17 +7,20 @@ import (
 	"strings"
 )
 
-func Struct2Map(obj interface{}) (map[string]interface{}, error) {
-	objType := reflect.TypeOf(obj)
-	if objType.Kind() != reflect.Struct {
-		return nil, errors.New("obj is not struct")
+func Struct2Map(in interface{}) (map[string]interface{}, error) {
+	out := make(map[string]interface{})
+	v := reflect.ValueOf(in)
+	if v.Kind() == reflect.Ptr {
+		v = v.Elem()
 	}
-	objValue := reflect.ValueOf(obj)
-	data := make(map[string]interface{})
-	for i := 0; i < objType.NumField(); i++ {
-		data[objType.Field(i).Name] = objValue.Field(i).Interface()
+	if v.Kind() != reflect.Struct {
+		return nil, fmt.Errorf("ToMap only accepts struct or struct pointer; got %T", v)
 	}
-	return data, nil
+	t := v.Type()
+	for i := 0; i < v.NumField(); i++ {
+		out[t.Field(i).Name] = v.Field(i).Interface()
+	}
+	return out, nil
 }
 
 func Slice2String(obj interface{}) (string, error) {
