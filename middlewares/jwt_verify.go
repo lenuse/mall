@@ -21,7 +21,7 @@ func JwtVerify() gin.HandlerFunc {
 			utils.NewResponse(utils.Unauthorized).WriteJson(ctx)
 			return
 		}
-		ctx.Set(utils.UerIdKey, claims.Id)
+		ctx.Set(utils.JWTClaims, claims)
 		ctx.Next()
 	}
 }
