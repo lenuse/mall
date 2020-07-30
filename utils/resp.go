@@ -20,6 +20,7 @@ const (
 	Unauthorized    StateCode = 10040101
 	Success         StateCode = 10020000
 	InvalidArgument StateCode = 10040001
+	Forbidden       StateCode = 10040301
 )
 
 //前台100 500 错误
@@ -50,6 +51,7 @@ var statusText = map[StateCode]string{
 	AdminNotUnique:  "用户账号重复",
 	InsertError:     "存储失败",
 	QueryFail:       "查询失败",
+	Forbidden:       "缺少权限",
 }
 
 // StatusText 获取code的解释
